@@ -26,7 +26,7 @@ class TemplateReader:
             elif (course_name == 'Vision'):
                 template_path = "email_templates\\Vision_Template.html"
 
-            return template_path
-
         except Exception as e:
             print('An Exception Occured in template reader file : '+str(e))
+
+        return template_path
