@@ -90,8 +90,8 @@ def processRequest(req):
 
         log.write_log(sessionID, "Bot Says: "+fulfillmentText)
 
-        # return {"fulfillmentText": fulfillmentText}
-        return {"fulfillmentText": "Text response", "fulfillmentMessages": [{"text": {"text": [fulfillmentText]}}]}
+        return {"fulfillmentText": fulfillmentText}
+        # return {"fulfillmentText": "Text response", "fulfillmentMessages": [{"text": {"text": [fulfillmentText]}}]}
 
     else:
         log.write_log(sessionID, "Bot Says: " + result.fulfillmentText)
