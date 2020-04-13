@@ -8,22 +8,22 @@ class TemplateReader:
         template_path = None
 
         try:
-            if (course_name=='DataScienceMasters'):
+            if(course_name=='DataScienceMasters'):
                 template_path = "email_templates\\DSM_Template.html"
 
-            elif (course_name=='MachineLearningMasters'):
+            elif(course_name=='MachineLearningMasters'):
                 template_path = "email_templates\\MLM_Template.html"
 
-            elif (course_name == 'DeepLearningMasters'):
+            elif(course_name == 'DeepLearningMasters'):
                 template_path = "email_templates\\DLM_Template.html"
 
-            elif (course_name == 'NLPMasters'):
+            elif(course_name == 'NLPMasters'):
                 template_path = "email_templates\\NLPM_Template.html"
 
-            elif (course_name == 'DataScienceForManagers'):
+            elif(course_name == 'DataScienceForManagers'):
                 template_path = "email_templates\\DSFM_Template.html"
 
-            elif (course_name == 'Vision'):
+            elif(course_name == 'Vision'):
                 template_path = "email_templates\\Vision_Template.html"
 
         except Exception as e:
