@@ -73,7 +73,7 @@ def processRequest(req):
 
         """Send An Email to Student with Template as an Attachment"""
 
-        email.SendMail(senderAddress=configuration['SENDER_EMAIL'], toAddress=custInfoDict.get('cust_email'), subject=str(configuration['EMAIL_SUBJECT']), mailBody=configuration['EMAIL_BODY'],
+        email.SendMail(senderAddress=configuration['SENDER_EMAIL'], toAddress=custInfoDict.get('cust_email'), subject=str(configuration['EMAIL_SUBJECT']), mailBody=str(configuration['EMAIL_BODY']),
                      attachmentPath=template_path, attachmentFileName=str(custInfoDict.get('course_name'))+".html")
 
         log.write_log(sessionID, "An email has sent to student")
