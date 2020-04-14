@@ -5,6 +5,7 @@ from Scripts import logger
 from Scripts import template_reader
 from Scripts.config_reader import ConfigReader
 from Scripts.MailSending import SendMails
+import pymongo
 
 app = Flask(__name__)
 
@@ -15,6 +16,13 @@ app = Flask(__name__)
 def webhook():
 
     req = request.get_json(silent=True, force=True)
+
+    """Stored the incoming data in MongoDB"""
+
+    conn = pymongo.MongoClient("mongodb://192.168.43.217:27017/")
+    db = conn['chatbotdb']
+    coll = db['ajayinfotechcoll']
+    doc = coll.insert_one(req)
 
     """Sending an Input Student Request Data For Processing"""
     res = processRequest(req)
