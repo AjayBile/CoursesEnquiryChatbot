@@ -108,7 +108,7 @@ def processRequest(req):
     else:
         log.write_log(sessionID, "Bot Says: " + result['fulfillmentText'])
         fulfillmentText = "Data stored in mongodb for intent "+str(intent)
-        return {"fulfillmentText": fulfillmentText}
+        return {"fulfillmentText": result['fulfillmentText']}
 
 
 if __name__ == '__main__':
