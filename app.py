@@ -19,10 +19,13 @@ def webhook():
 
     """Stored the incoming data in MongoDB"""
 
-    conn = pymongo.MongoClient("mongodb://192.168.43.217:27017/")
+    conn = pymongo.MongoClient("mongodb+srv://ml:ml123@mlcluster-jnf6v.mongodb.net/test?retryWrites=true&w=majority")
+
     db = conn['chatbotdb']
     coll = db['ajayinfotechcoll']
     doc = coll.insert_one(req)
+
+    print("Documet insertion id "+str(doc.inserted_id))
 
     """Sending an Input Student Request Data For Processing"""
     res = processRequest(req)
@@ -42,21 +45,22 @@ def processRequest(req):
     result = req.get("queryResult")
     user_says=result.get("queryText")
     log.write_log(sessionID, "User Says: "+user_says)
-    parameters = result.get("parameters")
-
-    log.write_log(sessionID, "Data recieved from customer is "+str(parameters))
-
-    """Creating Dictionary Of Customer Data"""
-
-    custInfoDict = {}
-    custInfoDict['cust_name'] = parameters.get("name")
-    custInfoDict['cust_email'] = parameters.get("email")
-    custInfoDict['course_name'] = parameters.get("courses")[0]
-    custInfoDict['cust_contact'] = parameters.get("phone")
 
     intent: str = result.get("intent").get('displayName')
 
     if (intent=='course_selection'):
+
+        parameters = result.get("parameters")
+
+        log.write_log(sessionID, "Data recieved from customer is " + str(parameters))
+
+        """Creating Dictionary Of Customer Data"""
+
+        custInfoDict = {}
+        custInfoDict['cust_name'] = parameters.get("name")
+        custInfoDict['cust_email'] = parameters.get("email")
+        custInfoDict['course_name'] = parameters.get("courses")[0]
+        custInfoDict['cust_contact'] = parameters.get("phone")
 
         """Reading Default Configuration File"""
 
@@ -102,7 +106,9 @@ def processRequest(req):
         # return {"fulfillmentText": "Text response", "fulfillmentMessages": [{"text": {"text": [fulfillmentText]}}]}
 
     else:
-        log.write_log(sessionID, "Bot Says: " + result.fulfillmentText)
+        log.write_log(sessionID, "Bot Says: " + result['fulfillmentText'])
+        fulfillmentText = "Data stored in mongodb for intent "+str(intent)
+        return {"fulfillmentText": fulfillmentText}
 
 
 if __name__ == '__main__':
