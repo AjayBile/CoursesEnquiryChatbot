@@ -23,9 +23,9 @@ def webhook():
 
     db = conn['chatbotdb']
     coll = db['ajayinfotechcoll']
-    doc = coll.insert_one(req)
+    doc = coll.insert(req, check_keys=False)
 
-    print("Documet insertion id "+str(doc.inserted_id))
+    print("Documet insertion id "+str(doc))
 
     """Sending an Input Student Request Data For Processing"""
     res = processRequest(req)
@@ -48,11 +48,15 @@ def processRequest(req):
 
     intent: str = result.get("intent").get('displayName')
 
+    print("Intent name is "+intent)
+
     if (intent=='course_selection'):
+
+        print("BOT will proceed for processing incoming request")
 
         parameters = result.get("parameters")
 
-        log.write_log(sessionID, "Data recieved from customer is " + str(parameters))
+        print("Data recieved from customer is " + str(parameters))
 
         """Creating Dictionary Of Customer Data"""
 
@@ -62,25 +66,28 @@ def processRequest(req):
         custInfoDict['course_name'] = parameters.get("courses")[0]
         custInfoDict['cust_contact'] = parameters.get("phone")
 
+        print("customer data dict created ")
+
         """Reading Default Configuration File"""
 
         config_reader = ConfigReader()
         configuration = config_reader.read_default_config()
 
-        log.write_log(sessionID, "Configuration File Read Completed")
+        print("config file read")
 
         """Initialize Email Sending Part"""
 
         email = SendMails(mailServer='smtp.gmail.com', mailPort=587, emailUser=configuration['SENDER_EMAIL'],emailPass=configuration['PASSWORD'])
 
-        log.write_log(sessionID, "Initialization of Email Sending Completed")
+
+        print("Initialization of Email Sending Completed")
 
         """Get the path of HTML template"""
 
         template= template_reader.TemplateReader()
         template_path: str = template.get_student_template(course_name=custInfoDict.get('course_name'))
 
-        log.write_log(sessionID, "Fetching Path of HTML template part Completed")
+        print("Fetching Path of HTML template part Completed")
 
 
         """Send An Email to Student with Template as an Attachment"""
@@ -88,7 +95,8 @@ def processRequest(req):
         email.SendMail(senderAddress=configuration['SENDER_EMAIL'], toAddress=custInfoDict.get('cust_email'), subject=str(configuration['EMAIL_SUBJECT']), mailBody="Hello, \n \n Please find attached course details. \n \n Regards,\n Ajay Bile",
                      attachmentPath=template_path, attachmentFileName=str(custInfoDict.get('course_name')+".html"))
 
-        log.write_log(sessionID, "An email has sent to student")
+
+        print("An email has sent to student")
 
         """Sending An Email To Support Team with Details Of Student"""
 
@@ -96,18 +104,17 @@ def processRequest(req):
                        subject=configuration['SALES_TEAM_EMAIL_SUBJECT'], mailBody=configuration['SALES_MAIL_BODY'],
                        intendedPerson='SalesTeam', customerInfo=custInfoDict)
 
-        log.write_log(sessionID, "An Email has been send to support team")
+
+        print("An Email has been send to support team")
 
         fulfillmentText="We have sent the course syllabus and other relevant details to you via email. An email has been sent to the Support Team with your contact information, you'll be contacted soon. Do you have further queries?"
 
-        log.write_log(sessionID, "Bot Says: "+fulfillmentText)
 
         return {"fulfillmentText": fulfillmentText}
         # return {"fulfillmentText": "Text response", "fulfillmentMessages": [{"text": {"text": [fulfillmentText]}}]}
 
     else:
-        log.write_log(sessionID, "Bot Says: " + result['fulfillmentText'])
-        fulfillmentText = "Data stored in mongodb for intent "+str(intent)
+        print("Data stored in mongodb for intent "+str(intent))
         return {"fulfillmentText": result['fulfillmentText']}
 
 
