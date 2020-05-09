@@ -19,7 +19,7 @@ def webhook():
 
     """Stored the incoming data in MongoDB"""
 
-    conn = pymongo.MongoClient("mongodb+srv://ml:ml123@mlcluster-jnf6v.mongodb.net/test?retryWrites=true&w=majority")
+    conn = pymongo.MongoClient("<Cloud Mongo URL>")
 
     db = conn['chatbotdb']
     coll = db['ajayinfotechcoll']
